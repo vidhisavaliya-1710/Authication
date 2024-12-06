@@ -1,0 +1,34 @@
+.signup-sec{
+    margin: 110px auto;
+    box-shadow: 0 0 15px rgb(220, 219, 218);
+    border-radius: 20px;
+    width: 35%;
+}
+.form-control:focus{
+    border-color: rgb(135, 134, 134) !important;
+    
+    box-shadow: none;
+}
+.form-control{
+    color: rgb(155, 153, 153) !important;
+    border-width: 2px;
+}
+.btns{
+    /* background-color: #008080; */
+    background-color: #8174d9;
+}
+.form-floating>.form-control, .form-floating>.form-control-plaintext, .form-floating>.form-select{
+    min-height: 0;
+}
+.signup-sec h3{
+    color: #8174d9;
+}
+.form_sec{
+    color: rgb(78, 78, 78) !important;
+}
+.error{
+    font-size: 18px;
+}
+.link_sec{
+    color: #796dcd;
+}
