@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Form from 'react-bootstrap/Form';
 import './Login.css';
 import '../../App.css'
@@ -11,6 +11,8 @@ import { useDispatch } from 'react-redux';
 import { setEmail } from '../Slice/AuthSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { LoginSocialGoogle } from 'reactjs-social-login';
+import { GoogleLoginButton } from 'react-social-login-buttons';
 
 
 const init={
@@ -28,6 +30,8 @@ function Login() {
 
     const [login,setlogin]=useState()
     const [redirect, setRedirect] = useState(false);
+    const [provider, setProvider] = useState('');
+    const [profile, setProfile] = useState(null);
     const dispatch=useDispatch()
     const navigate=useNavigate()
     const auth=localStorage.getItem('authToken');
@@ -91,6 +95,44 @@ function Login() {
         return <Navigate to="/home" replace={true} />;
     }
 
+    const client_id='1045466982465-hkienvmgnel523u8jgd1m3quspas8q66.apps.googleusercontent.com';
+
+
+    console.log("client_id",client_id)
+
+    const onLoginStart = () => {
+        console.log('Google login started...');
+        // alert('Google login started...');
+    };
+
+    // Function: Trigger when Google Login succeeds
+    const onResolve = ({ provider, data }) => {
+        if (provider && data) {
+            setProvider(provider);
+            setProfile(data);
+            console.log('Google Login Success:', provider, data);
+            // alert(`Welcome, ${data.name}!`);
+            localStorage.setItem('authToken', data.access_token || data.sub);
+
+            // Dispatch email to Redux store
+            dispatch(setEmail(data.email));
+            navigate('/home');
+        } else {
+            console.error('Google login failed: No provider or data.');
+        }
+    };
+
+    // Function: Trigger when Google Login fails
+    const onReject = (err) => {
+        console.error('Google Login Failed:', err);
+        alert('Google login failed. Please try again.');
+    };
+
+    // const REDIRECT_URI = 'http://localhost:3000'
+
+    // console.log("REDIRECT_URI",REDIRECT_URI)
+
+
   return (
     
     <>
@@ -119,10 +161,26 @@ function Login() {
                                 <Link to='forgot'><p className='text-center mb-0 mt-3 fs-6 link_sec'>Forgot Password?</p></Link>
                                 <p className='text-center fs-5'>Don't Have an Account?<Link className='link_sec' to='/signup'>SignUp</Link></p>
                             </Form>
+
+
+                            
+                            <LoginSocialGoogle
+                client_id={client_id}  // Make sure to set this in .env
+                onLoginStart={onLoginStart}
+                scope="openid profile email"
+                onResolve={onResolve}
+                onReject={onReject}
+            >
+                <GoogleLoginButton />
+            </LoginSocialGoogle>
+           
+            
+                            </div>
+                          
                         </div>
                     </div>
                 </div>
-            </div>
+          
     </>
   )
 }
